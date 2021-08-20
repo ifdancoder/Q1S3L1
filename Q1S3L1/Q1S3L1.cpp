@@ -1,20 +1,40 @@
-﻿// Q1S3L1.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+﻿#include "PhoneBook.h"
 
-#include <iostream>
+int main() {
 
-int main()
-{
-    std::cout << "Hello World!\n";
+    ifstream file("PhoneBook.txt");
+    PhoneBook book(file);
+    cout << book;
+
+    cout << "------SortByPhone-------" << endl;
+    book.SortByPhone();
+    cout << book;
+
+    cout << "------SortByName--------" << endl;
+    book.SortByName();
+    cout << book;
+
+    cout << "-----GetPhoneNumber-----" << endl;
+    // лямбда функция, которая принимает фамилию и выводит номер телефона этого    	человека, либо строку с ошибкой
+    auto print_phone_number = [&book](const string& surname) {
+        cout << surname;
+        auto answer = book.GetPhoneNumber(surname);
+        if (get<0>(answer).empty())
+            cout << get<1>(answer);
+        else
+            cout << setw(24) << get<0>(answer);
+        cout << endl;
+    };
+
+    // вызовы лямбды
+    print_phone_number("Ivanov");
+    print_phone_number("Petrov");
+    print_phone_number("Solovev");
+
+    cout << "----ChangePhoneNumber----" << endl;
+    book.ChangePhoneNumber(Person{ "Kotov", "Vasilii", "Eliseevich" }, PhoneNumber{ 7, 123, "15344458", nullopt });
+    book.ChangePhoneNumber(Person{ "Mironova", "Margarita", "Vladimirovna" }, PhoneNumber{ 16, 465, "9155448", 13 });
+    cout << book;
+    return 0;
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
